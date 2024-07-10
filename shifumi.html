@@ -28,6 +28,8 @@ const context = canvas.getContext('2d');
 
 let end = false;
 
+let selected = false;
+
 let lives = 3;
 let ennemy_lives = 3;
 
@@ -39,17 +41,32 @@ let ennemyVal = -1;
 let hammerVal = false;
 let helmetVal = false;
 
-let background = new Image(2000, 2000);
-background.src = "background.jpg"
+let background = new Image(320, 480);
+background.src = "background.png"
+
+let gameAssets = new Image(640, 64);
+gameAssets.src = "assets.png"
 
 function loop() {
   requestAnimationFrame(loop);
   context.clearRect(0,0,canvas.width,canvas.height);
 
   if (!end) {
-
-    context.drawImage(background, 0, 0, 2000, 2000, 0, 0, canvas.width, canvas.height);
-
+    context.drawImage(background, 0, 0, 320, 480, 0, 0, canvas.width, canvas.height);
+    context.drawImage(gameAssets, 576, 0, 64, 64, canvas.width / 2 - 64, canvas.height / 2 - 64, 128, 128);
+    if (!selected) {
+      context.drawImage(gameAssets, 320, 0, 64, 64, 25, canvas.height - 100, 64, 64);
+      context.drawImage(gameAssets, 0, 0, 64, 64, 25, canvas.height - 100, 64, 64);
+      context.drawImage(gameAssets, 320, 0, 64, 64, 157, canvas.height - 100, 64, 64);
+      context.drawImage(gameAssets, 64, 0, 64, 64, 157, canvas.height - 100, 64, 64);
+      context.drawImage(gameAssets, 320, 0, 64, 64, canvas.width - 89, canvas.height - 100, 64, 64);
+      context.drawImage(gameAssets, 128, 0, 64, 64, canvas.width - 89, canvas.height - 100, 64, 64);
+    } else {
+      context.drawImage(gameAssets, 320, 0, 64, 64, 91, canvas.height - 100, 64, 64);
+      context.drawImage(gameAssets, 64 * 3, 0, 64, 64, 91, canvas.height - 100, 64, 64);
+      context.drawImage(gameAssets, 320, 0, 64, 64, 223, canvas.height - 100, 64, 64);
+      context.drawImage(gameAssets, 64 * 4, 0, 64, 64, 223, canvas.height - 100, 64, 64);
+    }
   } else {
     context.fillStyle = 'green';
     context.font = "50px Arial";
@@ -70,6 +87,7 @@ function loop() {
       ennemyVal = -1;
       hammerVal = false;
       helmetVal = false;
+      selected = false;
       end = false;
     }
   }
@@ -79,7 +97,7 @@ document.addEventListener('mouseup', function(e) {
   mousedown = false;
 });
 
-document.addEventListener('mousedown', function(e) {
+document.addEventListener('click', function(e) {
   let relativeX = e.x - canvas.offsetLeft;
 
   mousedown = true;
