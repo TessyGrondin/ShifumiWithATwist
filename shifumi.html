@@ -40,6 +40,7 @@ let ennemyVal = -1;
 
 let hammerVal = false;
 let helmetVal = false;
+let readyToCompare = false;
 
 let background = new Image(320, 480);
 background.src = "background.png"
@@ -63,9 +64,9 @@ function loop() {
       context.drawImage(gameAssets, 128, 0, 64, 64, canvas.width - 89, canvas.height - 100, 64, 64);
     } else {
       context.drawImage(gameAssets, 320, 0, 64, 64, 91, canvas.height - 100, 64, 64);
-      context.drawImage(gameAssets, 64 * 3, 0, 64, 64, 91, canvas.height - 100, 64, 64);
+      context.drawImage(gameAssets, 192, 0, 64, 64, 91, canvas.height - 100, 64, 64);
       context.drawImage(gameAssets, 320, 0, 64, 64, 223, canvas.height - 100, 64, 64);
-      context.drawImage(gameAssets, 64 * 4, 0, 64, 64, 223, canvas.height - 100, 64, 64);
+      context.drawImage(gameAssets, 256, 0, 64, 64, 223, canvas.height - 100, 64, 64);
     }
   } else {
     context.fillStyle = 'green';
@@ -88,6 +89,7 @@ function loop() {
       hammerVal = false;
       helmetVal = false;
       selected = false;
+      readyToCompare = false;
       end = false;
     }
   }
@@ -97,12 +99,32 @@ document.addEventListener('mouseup', function(e) {
   mousedown = false;
 });
 
-document.addEventListener('click', function(e) {
+document.addEventListener('mousedown', function(e) {
   let relativeX = e.x - canvas.offsetLeft;
 
   mousedown = true;
   if (e.y <= canvas.height - 70 || e.y >= canvas.height - 6 || end)
     return;
+  if (!selected) {
+    if (relativeX >= 25 && relativeX <= 89) {
+      playerVal = 0;
+      selected = true;
+    } else if (relativeX >= 157 && relativeX <= 221) {
+      playerVal = 1;
+      selected = true;
+    } else if (relativeX >= canvas.width - 89 && relativeX <= canvas.width - 25) {
+      playerVal = 2;
+      selected = true;
+    }
+  } else if (!readyToCompare) {
+    if (relativeX >= 91 && relativeX <= 155) {
+      hammerVal = true;
+      readyToCompare = true;
+    } else if (relativeX >= 223 && relativeX <= 287) {
+      helmetVal = true;
+      readyToCompare = true;
+    }
+  }
 });
 
 requestAnimationFrame(loop);
