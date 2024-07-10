@@ -67,12 +67,14 @@ function loop() {
       context.drawImage(gameAssets, 128, 0, 64, 64, canvas.width - 89, canvas.height - 100, 64, 64);
     } else {
       if (ennemyVal == -1)
-        ennemyVal = Math.round(Math.random() % 3);
+        ennemyVal = Math.floor(Math.random() * 3);
       if (ennemyVal == playerVal)
         draw = true;
       context.font = "20px Arial";
       context.fillStyle = 'yellow';
       context.fillText(ennemyVal, canvas.width - (ennemyVal.toString().length) * 20, 40)
+      context.drawImage(gameAssets, 384, 0, 64, 64, 91, canvas.height / 2 - 64, 64, 64);
+      context.drawImage(gameAssets, ennemyVal * 64, 0, 64, 64, 91, canvas.height / 2 - 64, 64, 64);
       if (draw) {
         context.fillText("tap to restart", canvas.width / 2 - 14 * 4, canvas.height - 10);
       } else {
