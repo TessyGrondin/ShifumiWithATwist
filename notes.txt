@@ -13,3 +13,7 @@ ciseaux | 157               | 221
 feuille | canvas.width - 89 | canvas.width - 25
 marteau | 91                | 155
 casque  | 223               | 287
+
+joueur
+
+ennemy

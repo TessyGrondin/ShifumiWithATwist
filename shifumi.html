@@ -42,6 +42,9 @@ let hammerVal = false;
 let helmetVal = false;
 let readyToCompare = false;
 
+let draw = false;
+let victory = false;
+
 let background = new Image(320, 480);
 background.src = "background.png"
 
@@ -63,10 +66,21 @@ function loop() {
       context.drawImage(gameAssets, 320, 0, 64, 64, canvas.width - 89, canvas.height - 100, 64, 64);
       context.drawImage(gameAssets, 128, 0, 64, 64, canvas.width - 89, canvas.height - 100, 64, 64);
     } else {
-      context.drawImage(gameAssets, 320, 0, 64, 64, 91, canvas.height - 100, 64, 64);
-      context.drawImage(gameAssets, 192, 0, 64, 64, 91, canvas.height - 100, 64, 64);
-      context.drawImage(gameAssets, 320, 0, 64, 64, 223, canvas.height - 100, 64, 64);
-      context.drawImage(gameAssets, 256, 0, 64, 64, 223, canvas.height - 100, 64, 64);
+      if (ennemyVal == -1)
+        ennemyVal = Math.round(Math.random() % 3);
+      if (ennemyVal == playerVal)
+        draw = true;
+      context.font = "20px Arial";
+      context.fillStyle = 'yellow';
+      context.fillText(ennemyVal, canvas.width - (ennemyVal.toString().length) * 20, 40)
+      if (draw) {
+        context.fillText("tap to restart", canvas.width / 2 - 14 * 4, canvas.height - 10);
+      } else {
+        context.drawImage(gameAssets, 320, 0, 64, 64, 91, canvas.height - 100, 64, 64);
+        context.drawImage(gameAssets, 192, 0, 64, 64, 91, canvas.height - 100, 64, 64);
+        context.drawImage(gameAssets, 320, 0, 64, 64, 223, canvas.height - 100, 64, 64);
+        context.drawImage(gameAssets, 256, 0, 64, 64, 223, canvas.height - 100, 64, 64);
+      }
     }
   } else {
     context.fillStyle = 'green';
@@ -80,7 +94,7 @@ function loop() {
       context.fillText("Defeat !", 10, canvas.height / 2 - 20);
     }
     context.font = "20px Arial";
-    context.fillText("tap to restart", canvas.width - 15 * 17, canvas.height - 10);
+    context.fillText("tap to restart", canvas.width / 2 - 14 * 4, canvas.height - 10);
     if (mousedown) {
       lives = 3;
       ennemy_lives = 3;
@@ -90,6 +104,7 @@ function loop() {
       helmetVal = false;
       selected = false;
       readyToCompare = false;
+      draw = false;
       end = false;
     }
   }
@@ -99,7 +114,7 @@ document.addEventListener('mouseup', function(e) {
   mousedown = false;
 });
 
-document.addEventListener('mousedown', function(e) {
+document.addEventListener('click', function(e) {
   let relativeX = e.x - canvas.offsetLeft;
 
   mousedown = true;
@@ -124,6 +139,14 @@ document.addEventListener('mousedown', function(e) {
       helmetVal = true;
       readyToCompare = true;
     }
+  }
+  if (draw) {
+    playerVal = -1;
+    ennemyVal = -1;
+    hammerVal = false;
+    helmetVal = false;
+    selected = false;
+    draw = false;
   }
 });
 
