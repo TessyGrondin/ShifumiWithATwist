@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shifumi</title>
+  <meta charset="UTF-8">
+  <style>
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  canvas {
+    border: 1px solid black;
+  }
+  </style>
+</head>
+<body>
+<canvas width="375" height="667" id="game"></canvas>
+<script>
+const canvas = document.getElementById('game');
+const context = canvas.getContext('2d');
+
+let end = false;
+
+let lives = 3;
+let ennemy_lives = 3;
+
+let mousedown = false;
+
+let playerVal = -1;
+let ennemyVal = -1;
+
+let hammerVal = false;
+let helmetVal = false;
+
+let background = new Image(2000, 2000);
+background.src = "background.jpg"
+
+function loop() {
+  requestAnimationFrame(loop);
+  context.clearRect(0,0,canvas.width,canvas.height);
+
+  if (!end) {
+
+    context.drawImage(background, 0, 0, 2000, 2000, 0, 0, canvas.width, canvas.height);
+
+  } else {
+    context.fillStyle = 'green';
+    context.font = "50px Arial";
+    context.drawImage(background, 0, 0, 2000, 2000, 0, 0, canvas.width, canvas.height);
+    if (lives > 0) {
+      context.fillText("Victory !", 10, canvas.height / 2 - 20);
+      context.fillText("lives left :", 10, canvas.height / 2 - 40);
+      context.fillText(lives, 10, canvas.height / 2 + 60)
+    } else {
+      context.fillText("Defeat !", 10, canvas.height / 2 - 20);
+    }
+    context.font = "20px Arial";
+    context.fillText("tap to restart", canvas.width - 15 * 17, canvas.height - 10);
+    if (mousedown) {
+      lives = 3;
+      ennemy_lives = 3;
+      playerVal = -1;
+      ennemyVal = -1;
+      hammerVal = false;
+      helmetVal = false;
+      end = false;
+    }
+  }
+}
+
+document.addEventListener('mouseup', function(e) {
+  mousedown = false;
+});
+
+document.addEventListener('mousedown', function(e) {
+  let relativeX = e.x - canvas.offsetLeft;
+
+  mousedown = true;
+  if (e.y <= canvas.height - 70 || e.y >= canvas.height - 6 || end)
+    return;
+});
+
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

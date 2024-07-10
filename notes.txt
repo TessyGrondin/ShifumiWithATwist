@@ -1,0 +1,8 @@
+draw bg
+draw ennemy
+draw choix
+rendre choix clickable
+stocker ce qui à été click
+choisir une valeur pour l'ennemy
+comparer
+retirer vie au perdant
