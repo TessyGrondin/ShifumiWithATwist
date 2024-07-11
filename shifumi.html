@@ -43,6 +43,10 @@ let readyToCompare = false;
 let draw = false;
 let victory = false;
 
+let intervalID = 0;
+let intervalOK = false;
+let time = 3;
+
 let victoryState = [false, false, true, true, false, false, false, true, false];
 
 let background = new Image(320, 480);
@@ -50,6 +54,8 @@ background.src = "background.png"
 
 let gameAssets = new Image(640, 64);
 gameAssets.src = "assets.png"
+
+context.fillStyle = 'yellow';
 
 function loop() {
   requestAnimationFrame(loop);
@@ -71,6 +77,8 @@ function loop() {
       x -= 32;
     }
     if (!selected) {
+      time = 3;
+      intervalOK = false;
       context.drawImage(gameAssets, 320, 0, 64, 64, 25, canvas.height - 100, 64, 64);
       context.drawImage(gameAssets, 0, 0, 64, 64, 25, canvas.height - 100, 64, 64);
       context.drawImage(gameAssets, 320, 0, 64, 64, 157, canvas.height - 100, 64, 64);
@@ -86,22 +94,29 @@ function loop() {
           victory = victoryState[ennemyVal * 3 + playerVal];
         readyToCompare = false;
       }
+      context.font = "50px Arial";
+      context.textAlign = "center";
+      context.fillText(Math.floor(time), canvas.width / 2, 100);
       context.font = "20px Arial";
-      context.fillStyle = 'yellow';
       context.drawImage(gameAssets, 384, 0, 64, 64, 91, canvas.height / 2 - 64, 64, 64);
       context.drawImage(gameAssets, ennemyVal * 64, 0, 64, 64, 91, canvas.height / 2 - 64, 64, 64);
       if (draw) {
+        time = 3;
         context.textAlign = "left";
         context.fillText("tap to restart", canvas.width / 2 - 14 * 4, canvas.height - 10);
       } else {
+        intervalOK = true;
         context.drawImage(gameAssets, 320, 0, 64, 64, 91, canvas.height - 100, 64, 64);
         context.drawImage(gameAssets, 192, 0, 64, 64, 91, canvas.height - 100, 64, 64);
         context.drawImage(gameAssets, 320, 0, 64, 64, 223, canvas.height - 100, 64, 64);
         context.drawImage(gameAssets, 256, 0, 64, 64, 223, canvas.height - 100, 64, 64);
+        if (time <= 0) {
+          lives--;
+          selected = false;
+        }
       }
     }
   } else {
-    context.fillStyle = 'yellow';
     context.textAlign = "left";
     context.font = "20px Arial";
     context.fillText("tap to restart", canvas.width / 2 - 14 * 4, canvas.height - 10);
@@ -119,6 +134,14 @@ function loop() {
   }
 }
 
+function decrement()
+{
+  if (intervalOK)
+    time--;
+}
+
+intervalID = setInterval(decrement, 750);
+
 document.addEventListener('click', function(e) {
   let relativeX = e.x - canvas.offsetLeft;
 
@@ -131,6 +154,7 @@ document.addEventListener('click', function(e) {
     readyToCompare = false;
     draw = false;
     end = false;
+    time = 3;
     return;
   }
   if (draw) {
@@ -138,6 +162,7 @@ document.addEventListener('click', function(e) {
     ennemyVal = -1;
     selected = false;
     draw = false;
+    time = 3;
     return;
   }
   if (e.y <= canvas.height - 70 || e.y >= canvas.height - 6)
