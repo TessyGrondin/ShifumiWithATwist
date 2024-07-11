@@ -91,6 +91,7 @@ function loop() {
       context.drawImage(gameAssets, 384, 0, 64, 64, 91, canvas.height / 2 - 64, 64, 64);
       context.drawImage(gameAssets, ennemyVal * 64, 0, 64, 64, 91, canvas.height / 2 - 64, 64, 64);
       if (draw) {
+        context.textAlign = "left";
         context.fillText("tap to restart", canvas.width / 2 - 14 * 4, canvas.height - 10);
       } else {
         context.drawImage(gameAssets, 320, 0, 64, 64, 91, canvas.height - 100, 64, 64);
@@ -101,27 +102,19 @@ function loop() {
     }
   } else {
     context.fillStyle = 'yellow';
+    context.textAlign = "left";
+    context.font = "20px Arial";
+    context.fillText("tap to restart", canvas.width / 2 - 14 * 4, canvas.height - 10);
     context.font = "50px Arial";
     context.textAlign = "center";
     if (lives > 0) {
       context.fillText("Victory !", canvas.width / 2, canvas.height / 2 - 70);
       context.fillText("lives left :", canvas.width / 2, canvas.height / 2);
       context.fillText(lives, canvas.width / 2, canvas.height / 2 + 60)
+      return;
     } else {
       context.fillText("Defeat !", canvas.width / 2, canvas.height / 2 - 70);
-    }
-    context.textAlign = "left";
-    context.font = "20px Arial";
-    context.fillText("tap to restart", canvas.width / 2 - 14 * 4, canvas.height - 10);
-    if (mousedown) {
-      lives = 3;
-      ennemy_lives = 3;
-      playerVal = -1;
-      ennemyVal = -1;
-      selected = false;
-      readyToCompare = false;
-      draw = false;
-      end = false;
+      return;
     }
   }
 }
@@ -129,6 +122,17 @@ function loop() {
 document.addEventListener('click', function(e) {
   let relativeX = e.x - canvas.offsetLeft;
 
+  if (end) {
+    lives = 3;
+    ennemy_lives = 3;
+    playerVal = -1;
+    ennemyVal = -1;
+    selected = false;
+    readyToCompare = false;
+    draw = false;
+    end = false;
+    return;
+  }
   if (draw) {
     playerVal = -1;
     ennemyVal = -1;
