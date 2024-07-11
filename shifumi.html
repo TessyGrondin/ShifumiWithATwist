@@ -45,6 +45,8 @@ let readyToCompare = false;
 let draw = false;
 let victory = false;
 
+let victoryState = [false, false, true, true, false, false, false, true, false];
+
 let background = new Image(320, 480);
 background.src = "background.png"
 
@@ -56,8 +58,20 @@ function loop() {
   context.clearRect(0,0,canvas.width,canvas.height);
 
   if (!end) {
+    if (lives <= 0 || ennemy_lives <= 0)
+      end = true;
     context.drawImage(background, 0, 0, 320, 480, 0, 0, canvas.width, canvas.height);
     context.drawImage(gameAssets, 576, 0, 64, 64, canvas.width / 2 - 64, canvas.height / 2 - 64, 128, 128);
+    let x = 10;
+    for (let i = 0; i < lives; i++) {
+      context.drawImage(gameAssets, 64 * 7, 0, 64, 64, x, 30, 32, 32);
+      x += 32;
+    }
+    x = canvas.width - 42;
+    for (let i = 0; i < ennemy_lives; i++) {
+      context.drawImage(gameAssets, 64 * 8, 0, 64, 64, x, 30, 32, 32);
+      x -= 32;
+    }
     if (!selected) {
       context.drawImage(gameAssets, 320, 0, 64, 64, 25, canvas.height - 100, 64, 64);
       context.drawImage(gameAssets, 0, 0, 64, 64, 25, canvas.height - 100, 64, 64);
@@ -66,13 +80,16 @@ function loop() {
       context.drawImage(gameAssets, 320, 0, 64, 64, canvas.width - 89, canvas.height - 100, 64, 64);
       context.drawImage(gameAssets, 128, 0, 64, 64, canvas.width - 89, canvas.height - 100, 64, 64);
     } else {
-      if (ennemyVal == -1)
-        ennemyVal = Math.floor(Math.random() * 3);
-      if (ennemyVal == playerVal)
-        draw = true;
+      if (readyToCompare) {
+          ennemyVal = Math.floor(Math.random() * 3);
+        if (ennemyVal == playerVal)
+          draw = true;
+        else
+          victory = victoryState[ennemyVal * 3 + playerVal];
+        readyToCompare = false;
+      }
       context.font = "20px Arial";
       context.fillStyle = 'yellow';
-      context.fillText(ennemyVal, canvas.width - (ennemyVal.toString().length) * 20, 40)
       context.drawImage(gameAssets, 384, 0, 64, 64, 91, canvas.height / 2 - 64, 64, 64);
       context.drawImage(gameAssets, ennemyVal * 64, 0, 64, 64, 91, canvas.height / 2 - 64, 64, 64);
       if (draw) {
@@ -112,36 +129,10 @@ function loop() {
   }
 }
 
-document.addEventListener('mouseup', function(e) {
-  mousedown = false;
-});
-
 document.addEventListener('click', function(e) {
   let relativeX = e.x - canvas.offsetLeft;
 
   mousedown = true;
-  if (e.y <= canvas.height - 70 || e.y >= canvas.height - 6 || end)
-    return;
-  if (!selected) {
-    if (relativeX >= 25 && relativeX <= 89) {
-      playerVal = 0;
-      selected = true;
-    } else if (relativeX >= 157 && relativeX <= 221) {
-      playerVal = 1;
-      selected = true;
-    } else if (relativeX >= canvas.width - 89 && relativeX <= canvas.width - 25) {
-      playerVal = 2;
-      selected = true;
-    }
-  } else if (!readyToCompare) {
-    if (relativeX >= 91 && relativeX <= 155) {
-      hammerVal = true;
-      readyToCompare = true;
-    } else if (relativeX >= 223 && relativeX <= 287) {
-      helmetVal = true;
-      readyToCompare = true;
-    }
-  }
   if (draw) {
     playerVal = -1;
     ennemyVal = -1;
@@ -149,6 +140,35 @@ document.addEventListener('click', function(e) {
     helmetVal = false;
     selected = false;
     draw = false;
+  }
+  if (e.y <= canvas.height - 70 || e.y >= canvas.height - 6 || end)
+    return;
+  if (!selected) {
+    if (relativeX >= 25 && relativeX <= 89) {
+      playerVal = 0;
+      selected = true;
+      readyToCompare = true;
+    } else if (relativeX >= 157 && relativeX <= 221) {
+      playerVal = 1;
+      selected = true;
+      readyToCompare = true;
+    } else if (relativeX >= canvas.width - 89 && relativeX <= canvas.width - 25) {
+      playerVal = 2;
+      selected = true;
+      readyToCompare = true;
+    }
+  } else {
+    if (relativeX >= 91 && relativeX <= 155) {
+      if (victory)
+        ennemy_lives--;
+      else
+        lives--
+      selected = false;
+    } else if (relativeX >= 223 && relativeX <= 287) {
+      if (victory)
+        lives--;
+      selected = false;
+    }
   }
 });
 
