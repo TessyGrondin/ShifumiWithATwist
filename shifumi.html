@@ -38,8 +38,6 @@ let mousedown = false;
 let playerVal = -1;
 let ennemyVal = -1;
 
-let hammerVal = false;
-let helmetVal = false;
 let readyToCompare = false;
 
 let draw = false;
@@ -120,8 +118,6 @@ function loop() {
       ennemy_lives = 3;
       playerVal = -1;
       ennemyVal = -1;
-      hammerVal = false;
-      helmetVal = false;
       selected = false;
       readyToCompare = false;
       draw = false;
@@ -136,13 +132,11 @@ document.addEventListener('click', function(e) {
   if (draw) {
     playerVal = -1;
     ennemyVal = -1;
-    hammerVal = false;
-    helmetVal = false;
     selected = false;
     draw = false;
     return;
   }
-  if (e.y <= canvas.height - 70 || e.y >= canvas.height - 6 || end)
+  if (e.y <= canvas.height - 70 || e.y >= canvas.height - 6)
     return;
   if (!selected) {
     if (relativeX >= 25 && relativeX <= 89) {
@@ -158,7 +152,7 @@ document.addEventListener('click', function(e) {
       selected = true;
       readyToCompare = true;
     }
-  } else {
+  } else if (!end) {
     if (relativeX >= 91 && relativeX <= 155) {
       if (victory)
         ennemy_lives--;
@@ -172,8 +166,7 @@ document.addEventListener('click', function(e) {
       selected = false;
       return;
     }
-  }
-  if (end)
+  } else if (end)
     mousedown = true;
 });
 
