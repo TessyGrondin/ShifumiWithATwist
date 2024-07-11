@@ -57,10 +57,10 @@ function loop() {
   requestAnimationFrame(loop);
   context.clearRect(0,0,canvas.width,canvas.height);
 
+  context.drawImage(background, 0, 0, 320, 480, 0, 0, canvas.width, canvas.height);
   if (!end) {
     if (lives <= 0 || ennemy_lives <= 0)
       end = true;
-    context.drawImage(background, 0, 0, 320, 480, 0, 0, canvas.width, canvas.height);
     context.drawImage(gameAssets, 576, 0, 64, 64, canvas.width / 2 - 64, canvas.height / 2 - 64, 128, 128);
     let x = 10;
     for (let i = 0; i < lives; i++) {
@@ -102,16 +102,17 @@ function loop() {
       }
     }
   } else {
-    context.fillStyle = 'green';
+    context.fillStyle = 'yellow';
     context.font = "50px Arial";
-    context.drawImage(background, 0, 0, 2000, 2000, 0, 0, canvas.width, canvas.height);
+    context.textAlign = "center";
     if (lives > 0) {
-      context.fillText("Victory !", 10, canvas.height / 2 - 20);
-      context.fillText("lives left :", 10, canvas.height / 2 - 40);
-      context.fillText(lives, 10, canvas.height / 2 + 60)
+      context.fillText("Victory !", canvas.width / 2, canvas.height / 2 - 70);
+      context.fillText("lives left :", canvas.width / 2, canvas.height / 2);
+      context.fillText(lives, canvas.width / 2, canvas.height / 2 + 60)
     } else {
-      context.fillText("Defeat !", 10, canvas.height / 2 - 20);
+      context.fillText("Defeat !", canvas.width / 2, canvas.height / 2 - 70);
     }
+    context.textAlign = "left";
     context.font = "20px Arial";
     context.fillText("tap to restart", canvas.width / 2 - 14 * 4, canvas.height - 10);
     if (mousedown) {
@@ -132,7 +133,6 @@ function loop() {
 document.addEventListener('click', function(e) {
   let relativeX = e.x - canvas.offsetLeft;
 
-  mousedown = true;
   if (draw) {
     playerVal = -1;
     ennemyVal = -1;
@@ -140,6 +140,7 @@ document.addEventListener('click', function(e) {
     helmetVal = false;
     selected = false;
     draw = false;
+    return;
   }
   if (e.y <= canvas.height - 70 || e.y >= canvas.height - 6 || end)
     return;
@@ -164,12 +165,16 @@ document.addEventListener('click', function(e) {
       else
         lives--
       selected = false;
+      return;
     } else if (relativeX >= 223 && relativeX <= 287) {
       if (victory)
         lives--;
       selected = false;
+      return;
     }
   }
+  if (end)
+    mousedown = true;
 });
 
 requestAnimationFrame(loop);
